@@ -2,16 +2,20 @@
 <head>
         <script>
                 function clickBtn1(){
-                    const maxLength = parseInt(document.getElementById('max').value);
-                    const isEnglishMode = document.getElementById('mode').value == "en";
                     const ta1 = document.getElementById('textarea1'); 
                     const ta2 = document.getElementById('textarea2'); 
                     const ta3 = document.getElementById('textarea3'); 
                     ta2.value = '';
                     ta3.value = '';
 
+                    const maxLength = parseInt(document.getElementById('max').value);
+                    const isEnglishMode = document.getElementById('mode').value == "en";
+
                     let sindex = 0;
-                    let src = ta1.value.replace(/(\r\n|\r|\n)/g, '\n');
+                    let src = '';
+                    let arr = ta1.value.split(/\r\n|\r|\n/);
+                    for (let i = 0; i < arr.length; i++)
+                        src += arr[i].trim() + '\n';
 
                     while(sindex < src.length) {
                         let buff = src.substring(sindex, sindex + maxLength);
@@ -19,7 +23,7 @@
                         if (idx >= 0)
                             buff = buff.substring(0, idx + 1);
 
-                        var out = buff;
+                        let out = buff;
                         if (isEnglishMode && out.length == maxLength) {
                             let eindex = out.lastIndexOf(' ');
                             if (eindex > 0)
@@ -27,7 +31,9 @@
                         }
 
                         ta2.value += (out.trim() + "\r\n");
-                        ta3.value += (out.trim().length + "\r\n");
+                        if (out.trim().length > 0)
+                            ta3.value += (out.trim().length);
+                        ta3.value += "\r\n";
                         sindex += out.length;
                     }
                 }
@@ -41,9 +47,9 @@
             <option value="ja">日本語モード</option>
     </select>
     <input id="max" type="text" size="10" value="70" ></input>文字で折り返す<br>
-    <textarea id="textarea1" cols="80" rows=25 ></textarea>
+    <textarea spellcheck="true" id="textarea1" cols="90" rows=30 ></textarea>
     <input type="button" value="改行" onclick="clickBtn1()"/>
-    <textarea readonly id="textarea2" cols="80" rows=25 ></textarea>
-    <textarea readonly id="textarea3" cols="4" rows=25 ></textarea>
+    <textarea spellcheck="true" id="textarea2" cols="90" rows=30 ></textarea>
+    <textarea readonly id="textarea3" cols="4" rows=30 ></textarea>
 </body>
 </html>
