@@ -11,31 +11,24 @@
                     ta3.value = '';
 
                     let sindex = 0;
-                    let src = ta1.value;
+                    let src = ta1.value.replace(/(\r\n|\r|\n)/g, '\n');
+
                     while(sindex < src.length) {
-                        let sub = src.substring(sindex, sindex + maxLength);
-                        if (sub.indexOf('\n') > 0) {
-                            sub = sub.substring(0, sub.indexOf('\n'));
+                        let buff = src.substring(sindex, sindex + maxLength);
+                        let idx = buff.indexOf('\n');
+                        if (idx >= 0)
+                            buff = buff.substring(0, idx + 1);
+
+                        var out = buff;
+                        if (isEnglishMode && out.length == maxLength) {
+                            let eindex = out.lastIndexOf(' ');
+                            if (eindex > 0)
+                                out = out.substring(0, eindex);
                         }
 
-                        console.log("sub: " + sub)
-                        if (sub.length == 0)
-                            break;
-
-                        let extract = sub;
-                        if (isEnglishMode) {
-                            if (extract.length == maxLength) {
-                                let eindex = sub.lastIndexOf(' ');
-                                console.log("eindex: " + eindex);
-                                if (eindex >= 1) {
-                                    extract = sub.substring(0, eindex);
-                                }
-                            }
-                        }
-                        console.log("ext: " + extract);
-                        ta2.value += (extract.trim() + "\r\n");
-                        ta3.value += (extract.trim().length + "\r\n");
-                        sindex += extract.length;
+                        ta2.value += (out.trim() + "\r\n");
+                        ta3.value += (out.trim().length + "\r\n");
+                        sindex += out.length;
                     }
                 }
                 </script>
@@ -43,14 +36,14 @@
 </head>
 <body>
     <p>改行くん</p><br>
-    <input id="max" type="number" size="10" value="70" ></input>文字で折り返す
     <select id="mode" >
             <option value="en">英語モード</option>
             <option value="ja">日本語モード</option>
-    </select><br>
+    </select>
+    <input id="max" type="text" size="10" value="70" ></input>文字で折り返す<br>
     <textarea id="textarea1" cols="80" rows=25 ></textarea>
     <input type="button" value="改行" onclick="clickBtn1()"/>
-    <textarea id="textarea2" cols="80" rows=25 ></textarea>
-    <textarea id="textarea3" cols="4" rows=25 ></textarea>
+    <textarea readonly id="textarea2" cols="80" rows=25 ></textarea>
+    <textarea readonly id="textarea3" cols="4" rows=25 ></textarea>
 </body>
 </html>
