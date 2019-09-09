@@ -1,0 +1,56 @@
+<html>
+<head>
+        <script>
+                function clickBtn1(){
+                    const maxLength = parseInt(document.getElementById('max').value);
+                    const isEnglishMode = document.getElementById('mode').value == "en";
+                    const ta1 = document.getElementById('textarea1'); 
+                    const ta2 = document.getElementById('textarea2'); 
+                    const ta3 = document.getElementById('textarea3'); 
+                    ta2.value = '';
+                    ta3.value = '';
+
+                    let sindex = 0;
+                    let src = ta1.value;
+                    while(sindex < src.length) {
+                        let sub = src.substring(sindex, sindex + maxLength);
+                        if (sub.indexOf('\n') > 0) {
+                            sub = sub.substring(0, sub.indexOf('\n'));
+                        }
+
+                        console.log("sub: " + sub)
+                        if (sub.length == 0)
+                            break;
+
+                        let extract = sub;
+                        if (isEnglishMode) {
+                            if (extract.length == maxLength) {
+                                let eindex = sub.lastIndexOf(' ');
+                                console.log("eindex: " + eindex);
+                                if (eindex >= 1) {
+                                    extract = sub.substring(0, eindex);
+                                }
+                            }
+                        }
+                        console.log("ext: " + extract);
+                        ta2.value += (extract.trim() + "\r\n");
+                        ta3.value += (extract.trim().length + "\r\n");
+                        sindex += extract.length;
+                    }
+                }
+                </script>
+
+</head>
+<body>
+    <p>改行くん</p><br>
+    <input id="max" type="number" size="10" value="70" ></input>文字で折り返す
+    <select id="mode" >
+            <option value="en">英語モード</option>
+            <option value="ja">日本語モード</option>
+    </select><br>
+    <textarea id="textarea1" cols="80" rows=25 ></textarea>
+    <input type="button" value="改行" onclick="clickBtn1()"/>
+    <textarea id="textarea2" cols="80" rows=25 ></textarea>
+    <textarea id="textarea3" cols="4" rows=25 ></textarea>
+</body>
+</html>
